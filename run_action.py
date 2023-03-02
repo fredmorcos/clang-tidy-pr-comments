@@ -287,6 +287,9 @@ def main():
         if not diagnostic["Duplicate"]
     ]
 
+    print(f"clang_tidy_diagnostics ===> {clang_tidy_diagnostics}")
+    print(f"files_and_lines_available_for_comments ===> {files_and_lines_available_for_comments}")
+
     # Remove entries we cannot comment on as the files weren't changed in this pull request
     clang_tidy_diagnostics[:] = [
         diagnostic
