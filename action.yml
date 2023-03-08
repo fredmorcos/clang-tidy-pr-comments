@@ -7,6 +7,10 @@ inputs:
   clang_tidy_fixes:
     description: 'Path to the clang-tidy fixes YAML file'
     required: true
+  prefix_dir:
+    description: 'Path to the prefix directory of source files'
+    required: false
+    default: '.'
   pull_request_id:
     description: 'Pull request id (otherwise attempt to extract it from the GitHub metadata)'
     required: false

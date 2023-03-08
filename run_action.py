@@ -154,6 +154,7 @@ def main():
         repo,
         args.pull_request_id,
     )
+    print(f"pull_request_reviews_url ===> {pull_request_reviews_url}")
     warning_comment_prefix = (
         ":warning: `clang-tidy` found issue(s) with the introduced code"
     )
@@ -183,12 +184,14 @@ def main():
             for d in clang_tidy_fixes["Diagnostics"]
         ]
 
-    repository_root = args.repository_root + "/"
+    repository_root = args.repository_root + os.path.sep
+    prefix_dir = os.environ.get("INPUT_PREFIX_DIR") + os.path.sep
     # Normalize paths
     for diagnostic in clang_tidy_fixes["Diagnostics"]:
         diagnostic["DiagnosticMessage"]["FilePath"] = diagnostic["DiagnosticMessage"][
             "FilePath"
         ].replace(repository_root, "")
+        diagnostic["DiagnosticMessage"]["FilePath"] = prefix_dir + diagnostic["DiagnosticMessage"]["FilePath"]
         diagnostic["DiagnosticMessage"]["FilePath"] = posixpath.normpath(
             diagnostic["DiagnosticMessage"]["FilePath"]
         )
@@ -196,6 +199,7 @@ def main():
             replacement["FilePath"] = replacement["FilePath"].replace(
                 repository_root, ""
             )
+            replacement["FilePath"] = prefix_dir + replacement["FilePath"]
             replacement["FilePath"] = posixpath.normpath(replacement["FilePath"])
     # Create a separate diagnostic entry for each replacement entry, if any
     clang_tidy_diagnostics = []
