@@ -430,17 +430,21 @@ def main():
         )
         current_review += 1
 
+        post_json = {
+            "body": warning_comment,
+            "event": review_event,
+            "comments": comments_chunk,
+        }
+        post_headers = {
+            "Accept": "application/vnd.github+json",
+            "Authorization": "Bearer %s" % github_token,
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        print(f"post_json ===> {post_json}")
         post_review_result = requests.post(
             pull_request_reviews_url,
-            json={
-                "body": warning_comment,
-                "event": review_event,
-                "comments": comments_chunk,
-            },
-            headers={
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": "token %s" % github_token,
-            },
+            json=post_json,
+            headers=post_headers
         )
 
         if post_review_result.status_code != requests.codes.ok:
